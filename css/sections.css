@@ -1,0 +1,630 @@
+/* ============================================================================
+   sections.css — Secciones de contenido
+   ----------------------------------------------------------------------------
+   1. Hero (pantalla principal de bienvenida)
+   2. Tipografia compartida de secciones interiores
+   3. Caracteristicas (tarjetas con grid)
+   4. Reporte (mapa + formulario lado a lado)
+   5. Estadisticas (KPI cards + tabla)
+   6. Alertas recientes
+   7. Acerca de (grid 2 cols)
+   ============================================================================ */
+
+
+/* ==========================================================================
+   1. HERO
+   ========================================================================== */
+#hero {
+  min-height: calc(100vh - var(--header-h));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  padding: 80px 64px;
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+.hero-content {
+  flex: 1;
+  max-width: 620px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* "Eyebrow" — pequeño texto con linea decorativa */
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 22px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 32px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* Titulo principal */
+.hero-title {
+  font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  color: #fff;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+.title-accent {
+  color: var(--accent);
+  position: relative;
+  display: inline-block;
+}
+/* Subrayado sutil bajo "la prioridad" */
+.title-accent::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 4px;
+  width: 100%;
+  height: 12px;
+  background: var(--accent);
+  opacity: 0.18;
+  border-radius: 4px;
+  z-index: -1;
+}
+
+.hero-desc {
+  font-size: 1.08rem;
+  color: var(--text-soft);
+  line-height: 1.75;
+  margin-bottom: 40px;
+  max-width: 540px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 56px;
+}
+
+/* Estadisticas rapidas */
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.stat { text-align: left; }
+.stat-num {
+  display: block;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+.stat-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.stat-divider {
+  width: 1px;
+  height: 44px;
+  background: var(--border);
+}
+
+/* Visual: logo grande con glow flotante */
+.hero-visual {
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 420px;
+  height: 420px;
+}
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(66, 165, 245, 0.25) 0%, transparent 65%);
+  animation: glowPulse 4s ease-in-out infinite alternate;
+}
+@keyframes glowPulse {
+  0%   { opacity: 0.5; transform: scale(0.95); }
+  100% { opacity: 1;   transform: scale(1.05); }
+}
+.hero-logo {
+  width: 340px;
+  height: auto;
+  position: relative;
+  z-index: 2;
+  animation: floatBadge 5s ease-in-out infinite alternate;
+  filter: drop-shadow(0 20px 40px rgba(66, 165, 245, 0.35));
+}
+@keyframes floatBadge {
+  0%   { transform: translateY(0)     rotate(-1deg); }
+  100% { transform: translateY(-18px) rotate(2deg); }
+}
+
+
+/* ==========================================================================
+   2. TIPOGRAFIA Y CONTENEDORES DE SECCIONES INTERIORES
+   ========================================================================== */
+#caracteristicas,
+#inicio,
+#estadisticas,
+#alertas,
+#acerca {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 48px 64px 80px;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.section-header {
+  margin-bottom: 48px;
+  max-width: 720px;
+}
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.section-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+section h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+.section-desc {
+  font-size: 1.02rem;
+  color: var(--text-soft);
+  line-height: 1.75;
+  max-width: 620px;
+}
+
+section h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  margin: 32px 0 16px;
+}
+section p {
+  color: var(--text-soft);
+  line-height: 1.78;
+}
+.section-cta {
+  margin-top: 48px;
+  text-align: center;
+}
+
+
+/* ==========================================================================
+   3. TARJETAS DE CARACTERISTICAS
+   ========================================================================== */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 16px;
+}
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--t-base);
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-btn), var(--accent));
+  opacity: 0;
+  transition: opacity var(--t-base);
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-lg), 0 0 24px rgba(66, 165, 245, 0.15);
+}
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: all var(--t-base);
+}
+.feature-icon svg { width: 28px; height: 28px; }
+.feature-card:hover .feature-icon {
+  background: var(--accent);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.feature-step {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.feature-card h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0 0 12px;
+  color: #fff;
+}
+.feature-card p {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  line-height: 1.65;
+  margin: 0;
+}
+
+
+/* ==========================================================================
+   4. SECCION DE REPORTE (mapa + formulario)
+   ========================================================================== */
+.reporte-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.reporte-mapa,
+.reporte-formulario {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+/* Header con numero de paso (1, 2) */
+.mapa-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.step-badge {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-btn);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(30, 136, 229, 0.4);
+}
+.mapa-header h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  color: #fff;
+}
+.mapa-header p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+#mapa {
+  height: 420px;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+
+/* Indicador de "ubicacion seleccionada" */
+.ubicacion-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(10, 22, 40, 0.6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  transition: all var(--t-base);
+}
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+.ubicacion-status.activo {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: var(--success);
+  color: var(--success);
+}
+.ubicacion-status.activo .status-dot {
+  background: var(--success);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+  70%  { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+
+/* ==========================================================================
+   5. ESTADISTICAS (KPI cards + tabla)
+   ========================================================================== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+.kpi-card {
+  background: linear-gradient(135deg, var(--bg-card), var(--bg-card-2));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.kpi-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.kpi-icon svg { width: 22px; height: 22px; }
+.kpi-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.kpi-num {
+  display: block;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.kpi-text {
+  font-size: 1.4rem;
+  color: var(--accent);
+  text-transform: capitalize;
+}
+
+/* Tabla de reportes */
+.tabla-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+#tabla-reportes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+#tabla-reportes thead   { background: rgba(10, 22, 40, 0.5); }
+#tabla-reportes th {
+  padding: 14px 18px;
+  text-align: left;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+#tabla-reportes td {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: middle;
+}
+#tabla-reportes tbody tr:last-child td { border-bottom: none; }
+#tabla-reportes tbody tr               { transition: background var(--t-fast); }
+#tabla-reportes tbody tr:hover         { background: rgba(66, 165, 245, 0.05); }
+
+.tabla-vacia td {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 32px !important;
+}
+
+
+/* ==========================================================================
+   6. ALERTAS RECIENTES
+   ========================================================================== */
+#alertas-recientes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.alerta {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  transition: all var(--t-fast);
+  animation: slideInRight 0.35s ease;
+}
+.alerta:hover {
+  transform: translateX(4px);
+  border-left-width: 6px;
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.alerta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.alerta-hora {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.alerta-desc {
+  margin: 0 0 8px !important;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.alerta-meta {
+  margin: 0 !important;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Variantes de color por tipo de incidente */
+.alerta-robo       { border-left-color: #e53935; }
+.alerta-vandalismo { border-left-color: #fb8c00; }
+.alerta-violencia  { border-left-color: #b71c1c; }
+.alerta-tiroteo    { border-left-color: #424242; }
+
+.alerta-vacia {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--text-muted);
+}
+.alerta-vacia svg {
+  margin: 0 auto 16px;
+  color: var(--text-muted);
+}
+.alerta-vacia p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+
+/* ==========================================================================
+   7. ACERCA DE
+   ========================================================================== */
+.acerca-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.acerca-text h3:first-child { margin-top: 0; }
+.acerca-text p              { margin-bottom: 14px; }
+
+.valores-list {
+  list-style: none;
+  margin-top: 16px;
+}
+.valores-list li {
+  padding: 12px 0 12px 28px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+.valores-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18px;
+  width: 16px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.valores-list li:last-child { border-bottom: none; }
+.valores-list strong {
+  color: var(--accent);
+  display: block;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.acerca-visual { text-align: center; }
+.acerca-logo {
+  max-width: 320px;
+  width: 100%;
+  margin: 0 auto;
+  filter: drop-shadow(0 16px 40px rgba(66, 165, 245, 0.25));
+  animation: floatBadge 6s ease-in-out infinite alternate;
+}

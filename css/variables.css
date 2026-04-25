@@ -1,0 +1,55 @@
+/* ============================================================================
+   variables.css — Tokens de diseño centralizados
+   ----------------------------------------------------------------------------
+   Define la paleta de colores, espaciados, sombras, tipografias y
+   transiciones que se reutilizan en todo el proyecto. Cambiar un valor
+   aqui afecta a toda la pagina automaticamente.
+   ============================================================================ */
+
+:root {
+  /* --- Paleta base --- */
+  --bg:           #0a1628;
+  --bg-2:         #0d1b2e;
+  --bg-panel:     #112240;
+  --bg-card:      #163157;
+  --bg-card-2:    #1a3a6a;
+  --border:       #1e4a80;
+  --border-soft:  rgba(66, 165, 245, 0.15);
+
+  /* --- Acentos azules --- */
+  --accent:       #42a5f5;          /* Azul cielo principal */
+  --accent-light: #90caf9;          /* Azul muy claro */
+  --accent-btn:   #1e88e5;          /* Azul botones */
+  --accent-btn-h: #1565c0;          /* Hover botones */
+  --accent-dim:   rgba(66, 165, 245, 0.12);
+
+  /* --- Texto --- */
+  --text:         #e8f4fd;
+  --text-muted:   #7ab3d8;
+  --text-soft:    #a8c8e0;
+
+  /* --- Estados (semantica) --- */
+  --success:      #22c55e;
+  --warning:      #f59e0b;
+  --danger:       #ef4444;
+
+  /* --- Layout --- */
+  --header-h:     72px;
+  --nav-width:    280px;
+  --container:    1280px;
+
+  /* --- Bordes redondeados --- */
+  --radius-sm:    6px;
+  --radius:       12px;
+  --radius-lg:    16px;
+
+  /* --- Sombras --- */
+  --shadow-sm:    0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow:       0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg:    0 20px 60px rgba(0, 0, 0, 0.45);
+
+  /* --- Transiciones estandar --- */
+  --t-fast:       0.15s ease;
+  --t-base:       0.25s ease;
+  --t-slow:       0.4s ease;
+}

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  PROYECTO:  Seguridad Vecinal — Plataforma Comunitaria de Reportes
+  ARCHIVO:   index.html
+  VERSION:   4.0 (estructura modular)
+
+  ESTRUCTURA DE ARCHIVOS DEL PROYECTO
+  -----------------------------------
+  /index.html              <- Este archivo (solo HTML)
+  /css/
+    ├─ variables.css       <- Tokens de diseño (colores, espacios, sombras)
+    ├─ base.css            <- Reset, tipografia, fondo animado, scrollbar
+    ├─ components.css      <- Botones, toasts, formularios, tags
+    ├─ layout.css          <- Header, sidebar, footer
+    ├─ sections.css        <- Hero, features, reporte, stats, alertas, acerca
+    └─ responsive.css      <- Media queries
+  /js/
+    ├─ ui.js               <- Toasts, navegacion, menu movil
+    ├─ mapa.js             <- Logica del mapa Leaflet
+    └─ reportes.js         <- Formulario, validacion, estadisticas, alertas
+  /img/
+    ├─ logo.png            <- Logo completo (escudo + texto)
+    └─ logo-escudo.png     <- Solo escudo (header y favicon)
+
+  COMUNICACION ENTRE MODULOS JS
+  -----------------------------
+  Cada modulo expone su API en window:
+    - window.UI        (toast, mostrarSeccion, toggleMenu, cerrarMenu)
+    - window.MAPA      (inicializar, invalidate, getUbicacion, etc.)
+    - window.REPORTES  (enviar, mostrarSeccion)
+
+  Los handlers onclick del HTML llaman a estas APIs publicas.
+  ============================================================================
+-->
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Plataforma comunitaria para reportar y visualizar incidentes de seguridad. Conectados, alertas, comunidad.">
+  <meta name="theme-color" content="#0d1b2e">
+  <title>Seguridad Vecinal — Tu comunidad protegida</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="img/logo-escudo.png">
+
+  <!-- Dependencias externas -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+  <!-- Fuente Nunito -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Hojas de estilo modulares (orden importa: variables -> base -> resto) -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- Modulos JavaScript (defer para que se ejecuten despues del HTML) -->
+  <script defer src="js/ui.js"></script>
+  <script defer src="js/mapa.js"></script>
+  <script defer src="js/reportes.js"></script>
+</head>
+
+<body>
+
+  <!-- Fondo animado: particulas flotantes -->
+  <div class="dot-field" aria-hidden="true"></div>
+
+  <!-- Contenedor de notificaciones Toast -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ============================================================
+       HEADER — barra de navegacion superior
+       ============================================================ -->
+  <header id="header" role="banner">
+    <div class="header-inner">
+
+      <div class="header-brand" onclick="UI.mostrarSeccion('hero')" role="button" tabindex="0" aria-label="Ir al inicio">
+        <img src="img/logo-escudo.png" alt="Logo Seguridad Vecinal" class="header-logo">
+        <span class="brand-name">Seguridad <strong>Vecinal</strong></span>
+      </div>
+
+      <!-- Nav horizontal (escritorio) -->
+      <nav class="nav-horizontal" id="nav-horizontal" aria-label="Navegacion principal">
+        <a href="#hero"            data-section="hero"            onclick="UI.mostrarSeccion('hero'); return false;">Inicio</a>
+        <a href="#caracteristicas" data-section="caracteristicas" onclick="UI.mostrarSeccion('caracteristicas'); return false;">Como funciona</a>
+        <a href="#estadisticas"    data-section="estadisticas"    onclick="UI.mostrarSeccion('estadisticas'); return false;">Estadisticas</a>
+        <a href="#alertas"         data-section="alertas"         onclick="UI.mostrarSeccion('alertas'); return false;">Alertas</a>
+        <a href="#acerca"          data-section="acerca"          onclick="UI.mostrarSeccion('acerca'); return false;">Acerca de</a>
+        <button class="nav-cta" onclick="REPORTES.mostrarSeccion()">Hacer reporte</button>
+      </nav>
+
+      <!-- Boton hamburguesa (movil) -->
+      <button id="btn-menu" onclick="UI.toggleMenu()" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       CONTENEDOR PRINCIPAL: sidebar + main
+       ============================================================ -->
+  <div id="contenedor-principal">
+
+    <!-- Sidebar movil (deslizable) -->
+    <nav id="menu-lateral" aria-label="Menu lateral">
+      <ul>
+        <li><a href="#" onclick="UI.mostrarSeccion('hero'); UI.cerrarMenu(); return false;">Inicio</a></li>
+        <li><a href="#" onclick="UI.mostrarSeccion('caracteristicas'); UI.cerrarMenu(); return false;">Como funciona</a></li>
+        <li><a href="#" onclick="UI.mostrarSeccion('estadisticas'); UI.cerrarMenu(); return false;">Estadisticas</a></li>
+        <li><a href="#" onclick="UI.mostrarSeccion('alertas'); UI.cerrarMenu(); return false;">Alertas Recientes</a></li>
+        <li><a href="#" onclick="UI.mostrarSeccion('acerca'); UI.cerrarMenu(); return false;">Acerca de</a></li>
+      </ul>
+      <div class="menu-cta-wrapper">
+        <button class="btn-primary" onclick="REPORTES.mostrarSeccion(); UI.cerrarMenu();">Hacer mi reporte</button>
+      </div>
+    </nav>
+    <div id="menu-overlay" onclick="UI.cerrarMenu()"></div>
+
+    <!-- ============================================================
+         MAIN: todas las secciones de contenido
+         ============================================================ -->
+    <main id="contenido" role="main">
+
+      <!-- ===== HERO ===== -->
+      <section id="hero">
+        <div class="hero-content">
+          <p class="hero-eyebrow">Plataforma comunitaria de seguridad</p>
+          <h1 class="hero-title">Tu seguridad es <span class="title-accent">la prioridad</span></h1>
+          <p class="hero-desc">
+            Una plataforma diseñada para que los vecinos reporten incidentes
+            de seguridad en tiempo real, los visualicen en un mapa interactivo
+            y mantengan a toda la comunidad informada y protegida.
+          </p>
+
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="REPORTES.mostrarSeccion()">
+              Hacer mi reporte
+              <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+                <path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="btn-secondary" onclick="UI.mostrarSeccion('caracteristicas')">Como funciona</button>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-num" id="stat-total">0</span>
+              <span class="stat-label">Reportes enviados</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+              <span class="stat-num">24/7</span>
+              <span class="stat-label">Monitoreo continuo</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+              <span class="stat-num">100%</span>
+              <span class="stat-label">Gratuito</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-glow"></div>
+          <img src="img/logo-escudo.png" alt="" class="hero-logo">
+        </div>
+      </section>
+
+      <!-- ===== CARACTERISTICAS ===== -->
+      <section id="caracteristicas" style="display:none;">
+        <button class="btn-back" onclick="UI.mostrarSeccion('hero')">
+          <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M15 10H5M9 6l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Volver al inicio
+        </button>
+
+        <div class="section-header">
+          <p class="section-eyebrow">Como funciona</p>
+          <h2>Tres pasos simples para proteger tu comunidad</h2>
+          <p class="section-desc">
+            La plataforma esta diseñada para ser facil de usar. En menos de un
+            minuto puedes reportar un incidente y ayudar a tus vecinos a estar
+            informados.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M16 4 C10 4 5 9 5 15 C5 22 16 30 16 30 C16 30 27 22 27 15 C27 9 22 4 16 4 Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/>
+                <circle cx="16" cy="15" r="4" fill="currentColor"/>
+              </svg>
+            </div>
+            <span class="feature-step">Paso 01</span>
+            <h3>Marca la ubicacion</h3>
+            <p>Haz clic en el mapa interactivo para seleccionar el lugar exacto donde ocurrio el incidente que deseas reportar.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <rect x="6" y="5" width="20" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/>
+                <line x1="10" y1="11" x2="22" y2="11" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="10" y1="16" x2="22" y2="16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <line x1="10" y1="21" x2="18" y2="21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="feature-step">Paso 02</span>
+            <h3>Describe lo ocurrido</h3>
+            <p>Selecciona el tipo de incidente (robo, vandalismo, violencia, etc.) y agrega una descripcion clara de lo que paso.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <circle cx="16" cy="11" r="4" fill="none" stroke="currentColor" stroke-width="2.2"/>
+                <circle cx="7"  cy="14" r="3" fill="none" stroke="currentColor" stroke-width="2.2"/>
+                <circle cx="25" cy="14" r="3" fill="none" stroke="currentColor" stroke-width="2.2"/>
+                <path d="M9 26 C9 21 12 19 16 19 C20 19 23 21 23 26"  fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M2 26 C2 22 4 21 7 21"  fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M30 26 C30 22 28 21 25 21" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <span class="feature-step">Paso 03</span>
+            <h3>Comunidad informada</h3>
+            <p>Tu reporte se publica en el mapa para que todos los vecinos puedan estar al tanto y tomar precauciones.</p>
+          </article>
+        </div>
+
+        <div class="section-cta">
+          <button class="btn-primary" onclick="REPORTES.mostrarSeccion()">Empezar a reportar</button>
+        </div>
+      </section>
+
+      <!-- ===== REPORTE (mapa + formulario) ===== -->
+      <section id="inicio" style="display:none;">
+        <button class="btn-back" onclick="UI.mostrarSeccion('hero')">
+          <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M15 10H5M9 6l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Volver al inicio
+        </button>
+
+        <div class="section-header">
+          <p class="section-eyebrow">Reporte de incidente</p>
+          <h2>Reporta lo que viste</h2>
+          <p class="section-desc">Sigue los pasos para registrar tu reporte. Toda la informacion permanece anonima si asi lo deseas.</p>
+        </div>
+
+        <div class="reporte-grid">
+
+          <div class="reporte-mapa">
+            <div class="mapa-header">
+              <span class="step-badge">1</span>
+              <div>
+                <h3>Marca la ubicacion en el mapa</h3>
+                <p>Haz clic en cualquier punto del mapa para señalar donde ocurrio.</p>
+              </div>
+            </div>
+            <div id="mapa"></div>
+            <div id="ubicacion-status" class="ubicacion-status">
+              <span class="status-dot"></span>
+              <span class="status-text">Esperando que selecciones una ubicacion...</span>
+            </div>
+          </div>
+
+          <div class="reporte-formulario">
+            <div class="mapa-header">
+              <span class="step-badge">2</span>
+              <div>
+                <h3>Completa los datos</h3>
+                <p>Cuanto mas claro sea tu reporte, mas util sera para la comunidad.</p>
+              </div>
+            </div>
+
+            <form id="formulario" onsubmit="event.preventDefault(); REPORTES.enviar();">
+              <div class="form-group">
+                <label for="nombre">Tu nombre</label>
+                <input type="text" id="nombre" placeholder="Ej: Jorge Gonzalez" autocomplete="name">
+                <span class="form-error"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="tipo">Tipo de incidente</label>
+                <select id="tipo">
+                  <option value="robo">Robo</option>
+                  <option value="vandalismo">Vandalismo</option>
+                  <option value="violencia">Violencia</option>
+                  <option value="tiroteo">Tiroteo</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="descripcion">Descripcion del incidente</label>
+                <textarea id="descripcion" placeholder="Describe lo que sucedio con el mayor detalle posible..." rows="4"></textarea>
+                <span class="form-error"></span>
+              </div>
+
+              <button type="submit" class="btn-primary btn-full">
+                Enviar reporte
+                <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+                  <path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+
+              <p class="form-disclaimer">
+                Al enviar este reporte aceptas que la informacion sea visible en el mapa para otros vecinos.
+              </p>
+            </form>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===== ESTADISTICAS ===== -->
+      <section id="estadisticas" style="display:none;">
+        <button class="btn-back" onclick="UI.mostrarSeccion('hero')">
+          <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M15 10H5M9 6l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Volver al inicio
+        </button>
+
+        <div class="section-header">
+          <p class="section-eyebrow">Estadisticas</p>
+          <h2>Datos en tiempo real</h2>
+          <p class="section-desc">Visualiza el comportamiento de los reportes de tu comunidad.</p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13l4 4 14-14" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="kpi-label">Total de reportes</span>
+            <span class="kpi-num" id="total-reportes">0</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5" fill="none"/><path d="M12 7v6l4 2" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+            </div>
+            <span class="kpi-label">Reporte mas reciente</span>
+            <span class="kpi-num kpi-text" id="kpi-reciente">--</span>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 4-9 4-9-4 9-4zM3 12l9 4 9-4M3 17l9 4 9-4" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linejoin="round"/></svg>
+            </div>
+            <span class="kpi-label">Tipo mas frecuente</span>
+            <span class="kpi-num kpi-text" id="kpi-frecuente">--</span>
+          </div>
+        </div>
+
+        <h3>Reportes por tipo</h3>
+        <ul id="lista-conteo" class="chips-list">
+          <li class="chip-empty">Aun no hay reportes registrados.</li>
+        </ul>
+
+        <h3>Historial completo</h3>
+        <div class="tabla-wrapper">
+          <table id="tabla-reportes">
+            <thead>
+              <tr><th>Nombre</th><th>Tipo</th><th>Descripcion</th></tr>
+            </thead>
+            <tbody id="cuerpo-tabla">
+              <tr class="tabla-vacia"><td colspan="3">No hay reportes para mostrar todavia.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== ALERTAS ===== -->
+      <section id="alertas" style="display:none;">
+        <button class="btn-back" onclick="UI.mostrarSeccion('hero')">
+          <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M15 10H5M9 6l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Volver al inicio
+        </button>
+
+        <div class="section-header">
+          <p class="section-eyebrow">Alertas</p>
+          <h2>Lo mas reciente en tu zona</h2>
+          <p class="section-desc">Las alertas se generan automaticamente cuando alguien envia un nuevo reporte.</p>
+        </div>
+
+        <div id="alertas-recientes">
+          <div class="alerta-vacia">
+            <svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true">
+              <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="2.5" opacity="0.3"/>
+              <path d="M24 14v12M24 32v.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <p>No hay alertas recientes. Cuando se envien reportes, apareceran aqui.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ACERCA DE ===== -->
+      <section id="acerca" style="display:none;">
+        <button class="btn-back" onclick="UI.mostrarSeccion('hero')">
+          <svg viewBox="0 0 20 20" width="14" height="14" aria-hidden="true"><path d="M15 10H5M9 6l-4 4 4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Volver al inicio
+        </button>
+
+        <div class="section-header">
+          <p class="section-eyebrow">Acerca de</p>
+          <h2>Una iniciativa para tu comunidad</h2>
+        </div>
+
+        <div class="acerca-grid">
+          <div class="acerca-text">
+            <h3>Nuestra mision</h3>
+            <p>Esta plataforma fue creada con el objetivo de ayudar a combatir la inseguridad en la comunidad, ofreciendo una forma sencilla para que las personas reporten incidentes ante la constante inseguridad que se presenta en la ciudad.</p>
+            <p>Buscamos que las autoridades tengan un mejor control de los incidentes y puedan actuar de manera mas efectiva, mientras los vecinos se mantienen informados sobre lo que ocurre en su zona.</p>
+
+            <h3>Tres valores fundamentales</h3>
+            <ul class="valores-list">
+              <li><strong>Conectados</strong> Una red de vecinos que se cuidan entre si.</li>
+              <li><strong>Alertas</strong> Informacion en tiempo real sobre incidentes cercanos.</li>
+              <li><strong>Comunidad</strong> Una herramienta abierta y gratuita para todos.</li>
+            </ul>
+          </div>
+
+          <div class="acerca-visual">
+            <img src="img/logo.png" alt="Logo Seguridad Vecinal" class="acerca-logo">
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer id="footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-col footer-brand">
+        <img src="img/logo-escudo.png" alt="" class="footer-logo">
+        <h4>Seguridad Vecinal</h4>
+        <p>Conectados &middot; Alertas &middot; Comunidad</p>
+      </div>
+
+      <div class="footer-col">
+        <h5>Navegacion</h5>
+        <ul>
+          <li><a href="#" onclick="UI.mostrarSeccion('hero'); return false;">Inicio</a></li>
+          <li><a href="#" onclick="UI.mostrarSeccion('caracteristicas'); return false;">Como funciona</a></li>
+          <li><a href="#" onclick="UI.mostrarSeccion('estadisticas'); return false;">Estadisticas</a></li>
+          <li><a href="#" onclick="UI.mostrarSeccion('acerca'); return false;">Acerca de</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Recursos</h5>
+        <ul>
+          <li><a href="#" onclick="REPORTES.mostrarSeccion(); return false;">Reportar incidente</a></li>
+          <li><a href="#" onclick="UI.mostrarSeccion('alertas'); return false;">Ver alertas</a></li>
+          <li><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; <span id="year"></span> Seguridad Vecinal. Una iniciativa comunitaria.</p>
+      <p class="footer-legal">Hecho con dedicacion para proteger lo que importa.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

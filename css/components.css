@@ -1,0 +1,281 @@
+/* ============================================================================
+   components.css — Componentes reutilizables
+   ----------------------------------------------------------------------------
+   1. Botones (primary, secondary, back, full)
+   2. Toast (sistema de notificaciones)
+   3. Formularios (inputs, validacion visual)
+   4. Tags / chips (etiquetas de tipo de incidente)
+   ============================================================================ */
+
+
+/* ==========================================================================
+   1. BOTONES
+   ========================================================================== */
+
+/* Primary: boton principal con sombra y hover animado */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--accent-btn);
+  color: #fff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.96rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transition: all var(--t-base);
+  box-shadow: 0 4px 18px rgba(30, 136, 229, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
+  opacity: 0;
+  transition: opacity var(--t-base);
+}
+.btn-primary:hover {
+  background: var(--accent-btn-h);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(30, 136, 229, 0.55);
+}
+.btn-primary:hover::before { opacity: 1; }
+.btn-primary:active        { transform: translateY(0); }
+.btn-primary svg           { transition: transform var(--t-base); }
+.btn-primary:hover svg     { transform: translateX(3px); }
+
+/* Secondary: outline */
+.btn-secondary {
+  background: transparent;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  padding: 12px 26px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.96rem;
+  font-weight: 700;
+  transition: all var(--t-base);
+}
+.btn-secondary:hover {
+  background: var(--accent-dim);
+  transform: translateY(-2px);
+}
+
+/* Back: boton sutil de volver */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all var(--t-fast);
+  margin-bottom: 24px;
+}
+.btn-back:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.btn-back svg          { transition: transform var(--t-fast); }
+.btn-back:hover svg    { transform: translateX(-3px); }
+
+/* Modificadores */
+.btn-full { width: 100%; }
+
+
+/* ==========================================================================
+   2. SISTEMA DE TOAST (notificaciones flotantes)
+   Reemplazan los alert() del navegador.
+   ========================================================================== */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  min-width: 280px;
+  max-width: 380px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(420px);
+  opacity: 0;
+  transition: transform var(--t-base), opacity var(--t-base);
+  pointer-events: auto;
+}
+.toast.show { transform: translateX(0); opacity: 1; }
+
+/* Variantes por tipo */
+.toast-success         { border-left-color: var(--success); }
+.toast-success .toast-icon { color: var(--success); }
+.toast-warning         { border-left-color: var(--warning); }
+.toast-warning .toast-icon { color: var(--warning); }
+.toast-info .toast-icon    { color: var(--accent); }
+
+.toast-icon { display: flex; flex-shrink: 0; }
+.toast-msg  { flex: 1; line-height: 1.4; }
+
+
+/* ==========================================================================
+   3. FORMULARIOS
+   ========================================================================== */
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(10, 22, 40, 0.7);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.96rem;
+  transition: all var(--t-fast);
+  outline: none;
+}
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.55;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  background: rgba(10, 22, 40, 0.9);
+  box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.15);
+}
+
+select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237ab3d8' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+}
+select option { background: var(--bg-card); color: var(--text); }
+textarea      { resize: vertical; min-height: 100px; line-height: 1.55; }
+
+/* --- Estados de validacion --- */
+.form-group.invalido input,
+.form-group.invalido textarea {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.05);
+}
+.form-group.valido input,
+.form-group.valido textarea {
+  border-color: var(--success);
+}
+
+.form-error {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: var(--danger);
+  font-weight: 600;
+  min-height: 1.1em;
+}
+
+.form-disclaimer {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+
+/* ==========================================================================
+   4. TAGS Y CHIPS (etiquetas de tipo de incidente)
+   ========================================================================== */
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tag-robo       { background: rgba(229, 57, 53, 0.18);  color: #ff8a85; }
+.tag-vandalismo { background: rgba(251, 140, 0, 0.18);  color: #ffb74d; }
+.tag-violencia  { background: rgba(183, 28, 28, 0.22);  color: #ff8a85; }
+.tag-tiroteo    { background: rgba(33, 33, 33, 0.4);    color: #cfd8dc; }
+.tag-otro       { background: var(--accent-dim);        color: var(--accent); }
+
+/* Lista de chips de conteo en estadisticas */
+.chips-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 6px 16px 6px 8px;
+  font-size: 0.88rem;
+  color: var(--text);
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.chip-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+.chip-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
