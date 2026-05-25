@@ -76,6 +76,48 @@
 
     // Scroll suave al inicio
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Re-armar las animaciones de scroll-reveal de la nueva sección
+    if (seccion) {
+      var elementos = seccion.querySelectorAll('.reveal');
+      for (var j = 0; j < elementos.length; j++) {
+        elementos[j].classList.remove('is-visible');
+      }
+      // Pequeño delay para que el navegador procese el cambio de display
+      setTimeout(function () { observarRevelaciones(); }, 30);
+    }
+  }
+
+
+  /* ==========================================================
+     SCROLL REVEAL — IntersectionObserver
+     Agrega la clase 'is-visible' a los elementos .reveal
+     cuando entran al viewport.
+     ========================================================== */
+  var observer = null;
+  function observarRevelaciones() {
+    if (!('IntersectionObserver' in window)) {
+      // Fallback: mostrar todo
+      var todos = document.querySelectorAll('.reveal');
+      for (var i = 0; i < todos.length; i++) todos[i].classList.add('is-visible');
+      return;
+    }
+
+    if (!observer) {
+      observer = new IntersectionObserver(function (entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            entries[i].target.classList.add('is-visible');
+            observer.unobserve(entries[i].target);
+          }
+        }
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    }
+
+    var pendientes = document.querySelectorAll('.reveal:not(.is-visible)');
+    for (var k = 0; k < pendientes.length; k++) {
+      observer.observe(pendientes[k]);
+    }
   }
 
 
@@ -123,6 +165,7 @@
 
     checkLayout();
     mostrarSeccion('hero');
+    observarRevelaciones();
   });
 
   window.addEventListener('resize', checkLayout);

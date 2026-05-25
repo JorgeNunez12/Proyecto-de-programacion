@@ -1,11 +1,11 @@
 /* ============================================================================
-   responsive.css — Media queries adaptativas
+   responsive.css — Adaptaciones responsive (mobile-first refinements)
    ----------------------------------------------------------------------------
    Breakpoints:
-     - 1100px : layouts de 2 columnas pasan a 1
-     - 900px  : oculta nav horizontal, activa sidebar
-     - 700px  : ajustes de tamaños en movil
-     - 480px  : ajustes finos en pantallas muy pequeñas
+     - 1100px : grids de 3 -> 2 columnas, layouts 2-col -> 1
+     - 900px  : oculta nav horizontal, sidebar móvil
+     - 700px  : ajustes de tipografía y spacing
+     - 480px  : refinamientos finales
    ============================================================================ */
 
 
@@ -13,96 +13,136 @@
    1100px — Tablet grande
    ========================================================================== */
 @media (max-width: 1100px) {
+  .features-grid,
+  .kpi-grid,
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .reporte-grid { grid-template-columns: 1fr; }
   .acerca-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-  .hero-visual { width: 360px; height: 360px; }
-  .hero-logo   { width: 280px; }
+  .acerca-visual { max-width: 360px; margin: 0 auto; }
 }
 
 
 /* ==========================================================================
-   900px — Tablet / movil grande (oculta nav horizontal)
+   900px — Tablet / móvil grande
    ========================================================================== */
 @media (max-width: 900px) {
-  .header-inner { padding: 0 20px; gap: 14px; }
-
-  /* Hero centrado en 1 columna */
-  #hero {
-    flex-direction: column;
-    text-align: center;
-    padding: 56px 28px;
-    min-height: auto;
-    gap: 32px;
+  #header {
+    top: 8px;
+    width: calc(100% - 16px);
+    border-radius: 999px;
   }
-  .hero-content { max-width: 100%; }
-  .hero-eyebrow { justify-content: center; }
-  .hero-eyebrow::before { display: none; }
-  .hero-actions { justify-content: center; }
-  .hero-stats   { justify-content: center; flex-wrap: wrap; }
-  .hero-desc    { margin: 0 auto 32px; }
-  .hero-visual  { width: 280px; height: 280px; order: -1; }
-  .hero-logo    { width: 220px; }
+  .header-inner { padding: 0 8px 0 18px; gap: 12px; }
+  .brand-name { font-size: 14px; }
+
+  #contenedor-principal {
+    margin-top: calc(var(--header-h) + 16px);
+  }
+
+  /* Hero ajustado */
+  #hero {
+    padding: 56px 22px 80px;
+    min-height: auto;
+  }
+  .hero-actions { gap: 10px; }
+  .hero-stats   {
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-top: 32px;
+  }
+  .stat-num { font-size: 1.8rem; }
 
   /* Secciones interiores */
   #caracteristicas,
   #inicio,
   #estadisticas,
   #alertas,
+  #testimonios,
+  #faq,
   #acerca {
-    padding: 36px 20px 60px;
+    padding: 48px 20px 64px;
+  }
+
+  .section-header { margin-bottom: 40px; }
+
+  .features-grid,
+  .kpi-grid,
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   /* Footer apilado */
   .footer-inner {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 40px;
   }
   .footer-bottom {
     flex-direction: column;
     text-align: center;
+    gap: 8px;
   }
 }
 
 
 /* ==========================================================================
-   700px — Movil pequeño
+   700px — Móvil pequeño
    ========================================================================== */
 @media (max-width: 700px) {
-  body              { font-size: 15px; }
-  .hero-title       { font-size: 2.2rem; }
-  .stat-num         { font-size: 1.6rem; }
-  .stat-divider     { height: 30px; }
-  .hero-stats       { gap: 18px; }
-  .reporte-mapa,
-  .reporte-formulario { padding: 18px; }
-  #mapa             { height: 320px; }
-  .feature-card     { padding: 24px 22px; }
-  .kpi-card         { padding: 20px; }
-  .kpi-num          { font-size: 2rem; }
+  body { font-size: 14.5px; }
 
-  /* Toast en movil: ocupa todo el ancho */
+  .hero-title { letter-spacing: -0.035em; }
+  .stat-divider { display: none; }
+  .hero-stats { gap: 28px; }
+
+  .reporte-mapa,
+  .reporte-formulario { padding: 20px; }
+  .mapa-header { gap: 12px; margin-bottom: 18px; padding-bottom: 16px; }
+  #mapa { height: 320px; }
+
+  .feature-card,
+  .testimonial-card { padding: 24px; }
+  .kpi-card { padding: 22px; }
+  .kpi-num { font-size: 2rem; }
+
+  .faq-item summary { padding: 18px 4px; font-size: 14.5px; }
+
   #toast-container {
     bottom: 16px;
-    right: 16px;
-    left: 16px;
+    right: 12px;
+    left: 12px;
   }
   .toast {
     min-width: 0;
     max-width: 100%;
   }
+
+  #footer { padding: 56px 20px 24px; margin-top: 64px; }
 }
 
 
 /* ==========================================================================
-   480px — Movil muy pequeño
+   480px — Móvil muy pequeño
    ========================================================================== */
 @media (max-width: 480px) {
-  .hero-title  { font-size: 1.85rem; }
-  .brand-name  { font-size: 1rem; }
-  .header-logo { width: 36px; height: 36px; }
-  .nav-cta     { display: none; }
-  section h2   { font-size: 1.6rem; }
+  .header-logo { width: 26px; height: 26px; }
+  .brand-name strong { display: none; }
+  .nav-cta { display: none; }
+
+  .hero-actions { flex-direction: column; width: 100%; }
+  .hero-actions .btn-primary,
+  .hero-actions .btn-accent,
+  .hero-actions .btn-secondary { width: 100%; }
+
+  .hero-eyebrow,
+  .section-eyebrow { font-size: 11.5px; }
+
+  .stat-num { font-size: 1.5rem; }
+  .stat-label { font-size: 12px; }
+
+  .btn-back { padding: 6px 12px; font-size: 12px; }
 }

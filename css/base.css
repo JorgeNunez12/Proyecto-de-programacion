@@ -1,38 +1,48 @@
 /* ============================================================================
-   base.css — Reset, tipografia base y fondo animado
+   base.css — Reset, tipografía base y fondo
    ----------------------------------------------------------------------------
-   1. Reset: normaliza estilos del navegador
-   2. Body: tipografia y colores principales
-   3. Fondo animado: 3 capas (gradientes, cuadricula, particulas)
-   4. Scrollbar personalizado
+   Estética minimalista premium. Sin partículas, sin grids animados.
+   Solo un mesh-gradient sutil que da profundidad sin distraer.
    ============================================================================ */
 
-/* --- Reset --- */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+}
 
 body {
-  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg);
   color: var(--text);
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.011em;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
 }
 
-img { max-width: 100%; display: block; }
-a   { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: pointer; }
+img, svg { max-width: 100%; display: block; }
+a        { color: inherit; text-decoration: none; }
+button   { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, textarea, select { font-family: inherit; }
 
-/* --- Fondo animado: capa 1 (gradientes radiales pulsantes) --- */
+::selection {
+  background: rgba(139, 92, 246, 0.30);
+  color: #fff;
+}
+
+/* --- Fondo: mesh gradient muy sutil, fijo, sin animación llamativa --- */
 body::before {
   content: '';
   position: fixed;
@@ -40,103 +50,69 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 90% 70% at 15% 20%, rgba(30, 136, 229, 0.16) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 55% at 85% 75%, rgba(66, 165, 245, 0.10) 0%, transparent 55%),
-    linear-gradient(160deg, #0a1628 0%, #0d1b2e 50%, #0a1f42 100%);
-  animation: bgPulse 14s ease-in-out infinite alternate;
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139, 92, 246, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(99, 102, 241, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(139, 92, 246, 0.04) 0%, transparent 55%);
 }
 
-/* --- Fondo animado: capa 2 (cuadricula deslizante) --- */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(66, 165, 245, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(66, 165, 245, 0.04) 1px, transparent 1px);
-  background-size: 56px 56px;
-  animation: gridDrift 28s linear infinite;
-}
-
-/* --- Fondo animado: capa 3 (particulas con box-shadow) --- */
+/* --- Grid de fondo muy tenue (solo se ve si te acercas) --- */
 .dot-field {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  overflow: hidden;
-}
-.dot-field::before,
-.dot-field::after {
-  content: '';
-  position: absolute;
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--accent-light);
-  box-shadow:
-    130px  90px 0 rgba(144, 202, 249, 0.45),
-    360px 210px 0 rgba(66, 165, 245, 0.35),
-    580px 150px 0 rgba(144, 202, 249, 0.28),
-    800px 330px 0 rgba(66, 165, 245, 0.42),
-    210px 430px 0 rgba(144, 202, 249, 0.22),
-    920px 190px 0 rgba(66, 165, 245, 0.30),
-    470px 560px 0 rgba(144, 202, 249, 0.38),
-   1120px 310px 0 rgba(66, 165, 245, 0.25),
-    670px 710px 0 rgba(144, 202, 249, 0.18),
-   1310px 510px 0 rgba(66, 165, 245, 0.40),
-     60px 660px 0 rgba(144, 202, 249, 0.28),
-   1220px 110px 0 rgba(66, 165, 245, 0.18);
-  animation: floatDots 22s ease-in-out infinite alternate;
-}
-.dot-field::after {
-  box-shadow:
-    260px 160px 0 rgba(66, 165, 245, 0.28),
-    710px 100px 0 rgba(144, 202, 249, 0.36),
-   1060px 430px 0 rgba(66, 165, 245, 0.22),
-     90px 390px 0 rgba(144, 202, 249, 0.32),
-    960px 610px 0 rgba(66, 165, 245, 0.26),
-    410px 730px 0 rgba(144, 202, 249, 0.18),
-   1260px 260px 0 rgba(66, 165, 245, 0.36),
-    610px 490px 0 rgba(144, 202, 249, 0.28);
-  animation-delay: -11s;
-  animation-duration: 28s;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, #000 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, #000 30%, transparent 80%);
 }
 
-/* --- Animaciones del fondo --- */
-@keyframes bgPulse {
-  0%   { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-@keyframes gridDrift {
-  0%   { background-position: 0 0; }
-  100% { background-position: 56px 56px; }
-}
-@keyframes floatDots {
-  0%   { transform: translateY(0)     translateX(0); }
-  50%  { transform: translateY(-32px) translateX(16px); }
-  100% { transform: translateY(12px)  translateX(-12px); }
-}
-
-/* --- Animacion compartida: aparicion suave hacia arriba --- */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* Aseguramos que el contenido este sobre el fondo */
+/* --- Aseguramos profundidad de contenido sobre el fondo --- */
 header, #contenedor-principal, footer, main, section {
   position: relative;
   z-index: 1;
 }
 
-/* --- Scrollbar personalizado --- */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
-  border: 1px solid var(--bg);
+/* --- Reveal-on-scroll (controlado por IntersectionObserver en ui.js) --- */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-btn); }
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal[data-delay="1"] { transition-delay: 60ms; }
+.reveal[data-delay="2"] { transition-delay: 120ms; }
+.reveal[data-delay="3"] { transition-delay: 180ms; }
+.reveal[data-delay="4"] { transition-delay: 240ms; }
+.reveal[data-delay="5"] { transition-delay: 300ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* --- Animación de aparición compartida --- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Scrollbar minimalista --- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 999px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.12); }

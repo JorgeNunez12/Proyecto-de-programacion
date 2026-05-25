@@ -1,10 +1,5 @@
 /* ============================================================================
-   components.css — Componentes reutilizables
-   ----------------------------------------------------------------------------
-   1. Botones (primary, secondary, back, full)
-   2. Toast (sistema de notificaciones)
-   3. Formularios (inputs, validacion visual)
-   4. Tags / chips (etiquetas de tipo de incidente)
+   components.css — Componentes reutilizables (premium 2026)
    ============================================================================ */
 
 
@@ -12,92 +7,112 @@
    1. BOTONES
    ========================================================================== */
 
-/* Primary: boton principal con sombra y hover animado */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--accent-btn);
-  color: #fff;
-  border: none;
-  padding: 14px 28px;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 0.96rem;
-  font-weight: 800;
-  letter-spacing: 0.01em;
-  transition: all var(--t-base);
-  box-shadow: 0 4px 18px rgba(30, 136, 229, 0.4);
+  background: #FAFAFA;
+  color: #0A0A0A;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: transform var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
   position: relative;
-  overflow: hidden;
-}
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
-  opacity: 0;
-  transition: opacity var(--t-base);
+  isolation: isolate;
+  white-space: nowrap;
 }
 .btn-primary:hover {
-  background: var(--accent-btn-h);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(30, 136, 229, 0.55);
+  background: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(255, 255, 255, 0.12),
+              0 2px 6px rgba(0, 0, 0, 0.5);
 }
-.btn-primary:hover::before { opacity: 1; }
-.btn-primary:active        { transform: translateY(0); }
-.btn-primary svg           { transition: transform var(--t-base); }
-.btn-primary:hover svg     { transform: translateX(3px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary svg { transition: transform var(--t-fast); }
+.btn-primary:hover svg { transform: translateX(2px); }
 
-/* Secondary: outline */
+/* Variante con gradiente violeta (CTA principal) */
+.btn-accent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--gradient-primary);
+  color: #fff;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: transform var(--t-fast), box-shadow var(--t-fast), filter var(--t-fast);
+  box-shadow: 0 4px 18px rgba(139, 92, 246, 0.32),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  white-space: nowrap;
+}
+.btn-accent:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 8px 28px rgba(139, 92, 246, 0.45),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.btn-accent:active { transform: translateY(0); }
+.btn-accent svg { transition: transform var(--t-fast); }
+.btn-accent:hover svg { transform: translateX(2px); }
+
 .btn-secondary {
-  background: transparent;
-  color: var(--accent);
-  border: 2px solid var(--accent);
-  padding: 12px 26px;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 0.96rem;
-  font-weight: 700;
-  transition: all var(--t-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+  white-space: nowrap;
 }
 .btn-secondary:hover {
-  background: var(--accent-dim);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
 }
 
-/* Back: boton sutil de volver */
 .btn-back {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border);
-  color: var(--text-muted);
-  padding: 8px 16px;
-  border-radius: var(--radius);
-  font-family: inherit;
-  font-size: 0.85rem;
-  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
   transition: all var(--t-fast);
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 .btn-back:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-dim);
+  border-color: var(--border-strong);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
 }
-.btn-back svg          { transition: transform var(--t-fast); }
-.btn-back:hover svg    { transform: translateX(-3px); }
+.btn-back svg { transition: transform var(--t-fast); }
+.btn-back:hover svg { transform: translateX(-2px); }
 
-/* Modificadores */
 .btn-full { width: 100%; }
 
 
 /* ==========================================================================
-   2. SISTEMA DE TOAST (notificaciones flotantes)
-   Reemplazan los alert() del navegador.
+   2. TOAST (notificaciones)
    ========================================================================== */
 #toast-container {
   position: fixed;
@@ -114,15 +129,16 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
+  background: rgba(20, 20, 22, 0.85);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius);
   padding: 14px 18px;
   min-width: 280px;
   max-width: 380px;
-  font-size: 0.92rem;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--text);
   box-shadow: var(--shadow-lg);
   transform: translateX(420px);
@@ -132,12 +148,11 @@
 }
 .toast.show { transform: translateX(0); opacity: 1; }
 
-/* Variantes por tipo */
-.toast-success         { border-left-color: var(--success); }
+.toast-success { border-color: rgba(16, 185, 129, 0.4); }
 .toast-success .toast-icon { color: var(--success); }
-.toast-warning         { border-left-color: var(--warning); }
+.toast-warning { border-color: rgba(245, 158, 11, 0.4); }
 .toast-warning .toast-icon { color: var(--warning); }
-.toast-info .toast-icon    { color: var(--accent); }
+.toast-info    .toast-icon { color: var(--accent); }
 
 .toast-icon { display: flex; flex-shrink: 0; }
 .toast-msg  { flex: 1; line-height: 1.4; }
@@ -147,58 +162,58 @@
    3. FORMULARIOS
    ========================================================================== */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   position: relative;
 }
 
 label {
   display: block;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
   margin-bottom: 8px;
+  letter-spacing: -0.005em;
 }
 
 input, select, textarea {
   width: 100%;
   padding: 12px 14px;
-  background: rgba(10, 22, 40, 0.7);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   color: var(--text);
-  font-family: inherit;
-  font-size: 0.96rem;
-  transition: all var(--t-fast);
+  font-size: 14px;
+  font-weight: 400;
+  transition: border-color var(--t-fast), background var(--t-fast), box-shadow var(--t-fast);
   outline: none;
 }
 input::placeholder, textarea::placeholder {
-  color: var(--text-muted);
-  opacity: 0.55;
+  color: var(--text-dim);
+}
+input:hover, select:hover, textarea:hover {
+  border-color: var(--border-strong);
 }
 input:focus, select:focus, textarea:focus {
   border-color: var(--accent);
-  background: rgba(10, 22, 40, 0.9);
-  box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 select {
   appearance: none;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237ab3d8' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A1A1AA' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 38px;
 }
 select option { background: var(--bg-card); color: var(--text); }
-textarea      { resize: vertical; min-height: 100px; line-height: 1.55; }
+textarea      { resize: vertical; min-height: 110px; line-height: 1.55; }
 
-/* --- Estados de validacion --- */
 .form-group.invalido input,
 .form-group.invalido textarea {
   border-color: var(--danger);
-  background: rgba(239, 68, 68, 0.05);
+  background: rgba(239, 68, 68, 0.04);
 }
 .form-group.valido input,
 .form-group.valido textarea {
@@ -208,46 +223,47 @@ textarea      { resize: vertical; min-height: 100px; line-height: 1.55; }
 .form-error {
   display: block;
   margin-top: 6px;
-  font-size: 0.82rem;
+  font-size: 12px;
   color: var(--danger);
-  font-weight: 600;
-  min-height: 1.1em;
+  font-weight: 500;
+  min-height: 1em;
 }
 
 .form-disclaimer {
-  margin-top: 14px;
-  font-size: 0.8rem;
-  color: var(--text-muted);
+  margin-top: 16px;
+  font-size: 12px;
+  color: var(--text-tertiary);
   text-align: center;
   line-height: 1.5;
 }
 
 
 /* ==========================================================================
-   4. TAGS Y CHIPS (etiquetas de tipo de incidente)
+   4. TAGS Y CHIPS
    ========================================================================== */
 .tag {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  border: 1px solid transparent;
 }
-.tag-robo       { background: rgba(229, 57, 53, 0.18);  color: #ff8a85; }
-.tag-vandalismo { background: rgba(251, 140, 0, 0.18);  color: #ffb74d; }
-.tag-violencia  { background: rgba(183, 28, 28, 0.22);  color: #ff8a85; }
-.tag-tiroteo    { background: rgba(33, 33, 33, 0.4);    color: #cfd8dc; }
-.tag-otro       { background: var(--accent-dim);        color: var(--accent); }
+.tag-robo       { background: rgba(239, 68, 68, 0.10);  color: #FCA5A5; border-color: rgba(239, 68, 68, 0.25); }
+.tag-vandalismo { background: rgba(245, 158, 11, 0.10); color: #FCD34D; border-color: rgba(245, 158, 11, 0.25); }
+.tag-violencia  { background: rgba(220, 38, 38, 0.10);  color: #F87171; border-color: rgba(220, 38, 38, 0.30); }
+.tag-tiroteo    { background: rgba(82, 82, 91, 0.20);   color: #D4D4D8; border-color: rgba(255, 255, 255, 0.10); }
+.tag-otro       { background: var(--accent-soft);        color: var(--accent-hover); border-color: var(--border-accent); }
 
-/* Lista de chips de conteo en estadisticas */
 .chips-list {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 28px;
+  gap: 8px;
+  margin-bottom: 32px;
 }
 .chip {
   display: inline-flex;
@@ -255,27 +271,68 @@ textarea      { resize: vertical; min-height: 100px; line-height: 1.55; }
   gap: 8px;
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 6px 16px 6px 8px;
-  font-size: 0.88rem;
+  border-radius: 999px;
+  padding: 6px 14px 6px 6px;
+  font-size: 13px;
   color: var(--text);
-  font-weight: 700;
+  font-weight: 500;
   text-transform: capitalize;
+  transition: border-color var(--t-fast);
 }
+.chip:hover { border-color: var(--border-strong); }
 .chip-num {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: var(--accent);
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  background: var(--gradient-primary);
   color: #fff;
-  border-radius: 50%;
-  font-size: 0.78rem;
-  font-weight: 900;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
 }
 .chip-empty {
-  color: var(--text-muted);
-  font-style: italic;
-  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  font-style: normal;
+  font-size: 13px;
+}
+
+
+/* ==========================================================================
+   5. CARD genérica premium (utilidad)
+   ========================================================================== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  transition: border-color var(--t-base), background var(--t-base), transform var(--t-base);
+}
+.card:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
+}
+
+/* Eyebrow reutilizable */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  letter-spacing: -0.005em;
+}
+.eyebrow::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
